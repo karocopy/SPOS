@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Process {
+    int pid;
+    int burstTime;
+    int remainingTime;
+
+    public Process(int pid, int burstTime) {
+        this.pid = pid;
+        this.burstTime = burstTime;
+        this.remainingTime = burstTime;
+    }
+}
+
+public class RoundRobinScheduling {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of processes: ");
+        int n = sc.nextInt();
+        System.out.println("Enter the time quantum: ");
+        int timeQuantum = sc.nextInt();
+
+        List<Process> processes = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Enter process " + (i + 1) + " burst time: ");
+            int burstTime = sc.nextInt();
+            processes.add(new Process(i + 1, burstTime));
+        }
+
+        int currentTime = 0;
+        int completedProcesses = 0;
+
+        while (completedProcesses < n) {
+            boolean isCompleted = true;
+
+            for (Process process : processes) {
+                if (process.remainingTime > 0) {
+                    isCompleted = false;
+
+                    int executionTime = Math.min(timeQuantum, process.remainingTime);
+                    process.remainingTime -= executionTime;
+                    currentTime += executionTime;
+
+                    if (process.remainingTime == 0) {
+                        completedProcesses++;
+                        System.out.println("Process " + process.pid + " completed at time " + currentTime);
+                    } else {
+                        System.out.println("Process " + process.pid + " executed for time " + executionTime);
+                    }
+                }
+            }
+
+            if (isCompleted) {
+                break;
+            }
+        }
+
+        sc.close();
+    }
+}
