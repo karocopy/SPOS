@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Process {
+    int pid;
+    int priority;
+    int burstTime;
+    int completionTime;
+    int turnaroundTime;
+    int waitingTime;
+
+    public Process(int pid, int priority, int burstTime) {
+        this.pid = pid;
+        this.priority = priority;
+        this.burstTime = burstTime;
+    }
+}
+
+public class PriorityScheduling {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of processes: ");
+        int n = sc.nextInt();
+
+        List<Process> processes = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Enter process " + (i + 1) + " priority: ");
+            int priority = sc.nextInt();
+            System.out.println("Enter process " + (i + 1) + " burst time: ");
+            int burstTime = sc.nextInt();
+            processes.add(new Process(i + 1, priority, burstTime));
+        }
+
+        // Sorting processes based on priority
+        processes.sort(Comparator.comparingInt(process -> process.priority));
+
+        int totalTime = 0;
+
+        for (Process process : processes) {
+            process.completionTime = totalTime + process.burstTime;
+            process.turnaroundTime = process.completionTime;
+            process.waitingTime = process.turnaroundTime - process.burstTime;
+            totalTime = process.completionTime;
+        }
+
+        double avgWaitingTime = processes.stream().mapToDouble(p -> p.waitingTime).average().orElse(0);
+        double avgTurnaroundTime = processes.stream().mapToDouble(p -> p.turnaroundTime).average().orElse(0);
+
+        System.out.println("\nPID Priority Burst Complete Turnaround Waiting");
+        for (Process process : processes) {
+            System.out.println(process.pid + "\t" + process.priority + "\t" + process.burstTime + "\t" +
+                    process.completionTime + "\t" + process.turnaroundTime + "\t" + process.waitingTime);
+        }
+
+        System.out.println("\nAverage Waiting Time: " + avgWaitingTime);
+        System.out.println("Average Turnaround Time: " + avgTurnaroundTime);
+
+        sc.close();
+    }
+}
+
