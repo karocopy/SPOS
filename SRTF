@@ -75,12 +75,3 @@ int k[]= new int[n];   // it is also stores brust time
     sc.close();
 }
 }
-
-
-Burst time = execution time
-advantage=shorter process will be executed first
-less avg waiting time
-
-disadvantage=starvation for longer job
-
-it is non preamtive=the task is completed without interupptions
